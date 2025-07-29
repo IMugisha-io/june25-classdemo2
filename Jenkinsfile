@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -15,10 +14,10 @@ pipeline {
 
         stage('Set up Python Environment') {
             steps {
-                sh '''
-                    python3 -m venv $VENV_DIR
-                    source $VENV_DIR/bin/activate
-                    pip install --upgrade pip
+                bat '''
+                    python -m venv %VENV_DIR%
+                    call %VENV_DIR%\\Scripts\\activate.bat
+                    python -m pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
             }
@@ -26,8 +25,8 @@ pipeline {
 
         stage('Apply Migrations') {
             steps {
-                sh '''
-                    source $VENV_DIR/bin/activate
+                bat '''
+                    call %VENV_DIR%\\Scripts\\activate.bat
                     python manage.py migrate
                 '''
             }
@@ -35,18 +34,18 @@ pipeline {
 
         stage('Run Tests (Optional)') {
             steps {
-                sh '''
-                    source $VENV_DIR/bin/activate
-                    python manage.py test || true
+                bat '''
+                    call %VENV_DIR%\\Scripts\\activate.bat
+                    python manage.py test
                 '''
             }
         }
 
         stage('Run Server') {
             steps {
-                sh '''
-                    source $VENV_DIR/bin/activate
-                    nohup python manage.py runserver 0.0.0.0:8000 &
+                bat '''
+                    call %VENV_DIR%\\Scripts\\activate.bat
+                    start /b python manage.py runserver 0.0.0.0:8000
                 '''
             }
         }
