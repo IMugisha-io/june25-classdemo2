@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/IMugisha-io/june25-classdemo2.git'
+                git branch: 'main', url: 'https://github.com/IMugisha-io/june25-classdemo2.git'
             }
         }
 
